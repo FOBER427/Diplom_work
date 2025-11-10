@@ -1,0 +1,153 @@
+# **Итоговый модуль профессии Системный администратор, SYS-24, Фролов И.Р.**
+
+## Инфраструктура
+
+Начнем с создания инфрастуктуры, но прежде подготовим рабочее место:
+
+![изображение](https://github.com/user-attachments/assets/286f40c4-bea2-4097-98f0-8ca90805e91d)
+
+Создаем первый конфигурационный [файл](https://github.com/beast86m/diplom_work/blob/main/terraform/main.tf) terraform с настройкой провайдера:
+
+![изображение](https://github.com/user-attachments/assets/ad9d7ee7-9b24-4c79-8190-c6eb1df438ce)
+
+## Сеть
+
+Далее создаем [сеть и подсети](https://github.com/beast86m/diplom_work/blob/main/terraform/net.tf) для бужущих виртуальных машин:
+
+![изображение](https://github.com/user-attachments/assets/ea8dc17a-1508-448c-81b2-5071d59abc4c)
+
+Создаем [виртуальные машины](https://github.com/beast86m/diplom_work/blob/main/terraform/vm.tf):
+
+![изображение](https://github.com/user-attachments/assets/3b16825e-e623-4586-831c-eec3a6becfa9)
+
+![изображение](https://github.com/user-attachments/assets/2e0203e4-6403-4b71-a55a-2075e16f08b4)
+
+![изображение](https://github.com/user-attachments/assets/e00c52db-6fcd-4d58-a2cd-dcc8ae238d61)
+
+
+Создаем [Target группы](https://github.com/beast86m/diplom_work/blob/main/terraform/security.tf) и добавляем в нее две ВМ:
+
+![изображение](https://github.com/user-attachments/assets/048de38c-d623-4629-b4db-a436fe8414bb)
+
+![изображение](https://github.com/user-attachments/assets/90af9363-08b4-41a9-83c6-d5d4a25cd0fd)
+
+Создаем [Backend Group](https://github.com/beast86m/diplom_work/blob/main/terraform/security.tf), настраиваем backends на target group, ранее созданную. Настроаиваем healthcheck на корень (/) и порт 80, протокол HTTP:
+
+![изображение](https://github.com/user-attachments/assets/c75b4221-8112-49e3-94c8-78ef6036c615)
+
+![изображение](https://github.com/user-attachments/assets/2ea6f39d-8844-4421-a723-9ac0d8f9e47c)
+
+Создаем HTTP router. Путь укажем — /, backend group — созданную ранее:
+
+![изображение](https://github.com/user-attachments/assets/6a12746e-cef9-4def-89e9-ff3774efb72a)
+
+![изображение](https://github.com/user-attachments/assets/9f5e484c-0a2c-4304-947c-20f679c6123f)
+
+Создадим [Application load balancer](https://github.com/beast86m/diplom_work/blob/main/terraform/security.tf) для распределения трафика на веб-сервера, созданные ранее. Укажем HTTP router, созданный ранее, зададим listener тип auto, порт 80.
+
+![image](https://github.com/user-attachments/assets/1c893f57-1799-4d88-929f-fb99a5096558)
+
+![изображение](https://github.com/user-attachments/assets/ff145ebd-9674-4d2a-8df1-189d1b903ec8)
+
+Балансировщик досутпен по адресу: **[http://51.250.34.124/](http://51.250.34.124/)**
+
+## Сайт
+
+Устанавливаем Ansible:
+
+![image](https://github.com/user-attachments/assets/5ed948de-b49c-4bd1-bbad-c82b42e9efb9)
+![image](https://github.com/user-attachments/assets/106ad159-e8f2-45bb-b043-7bf9d087c71e)
+![image](https://github.com/user-attachments/assets/60503ed4-1f5a-409d-9ac4-8cb478ca611b)
+
+Проверяем, что Ansible установился:
+
+![image](https://github.com/user-attachments/assets/36238085-2851-4c9d-bb3f-354a2eed46a2)
+
+Делаем проверку серверров:
+
+![image](https://github.com/user-attachments/assets/1e88762d-2417-4d49-a81a-be7e1dad7267)
+
+![image](https://github.com/user-attachments/assets/319873fb-fb22-40f1-9bb0-03d822bee3ba)
+
+Сконфигурируем SSH  для настройки серверов через JumpHost Bastion:
+
+![image](https://github.com/user-attachments/assets/d02103d2-c337-429d-bd40-29a13c8f7ef4)
+
+Перед этим сгенерировали SSH-ключ командой: 
+
+![image](https://github.com/user-attachments/assets/b4513bb4-9d50-4d25-930c-aa928159412e)
+
+Слепок открытого ключа прописан в мета-данных при создании ВМ:
+
+![image](https://github.com/user-attachments/assets/8d7a8f94-0140-4cfb-a574-08b2d417084f)
+
+Установка nginx с помощью Ansible:
+
+![изображение](https://github.com/user-attachments/assets/05206c74-3eec-43df-9104-a5305b7f7b01)
+
+Проверяем работу Балансировщика и вновь созданных сайтов:
+
+![изображение](https://github.com/user-attachments/assets/a0a7bea8-ec7c-4088-a443-eee2e6573158)
+
+![изображение](https://github.com/user-attachments/assets/d148267c-f3f6-4685-b823-8c329775bf77)
+
+
+## Мониторинг
+
+Устанавливаем Zabbix-сервер: 
+
+![изображение](https://github.com/user-attachments/assets/df5ad3b2-391f-40cb-b3fc-9d8eab046617)
+
+После первоначальной настройки попадаем в Веб-интерфейс Zabbix'a, доступен по адресу **[http://51.250.46.10](http://51.250.46.10:8080)**:
+
+![изображение](https://github.com/user-attachments/assets/bedc69bf-1bcc-4855-8ddf-7c080649310e)
+
+Затем Zabbix-агенты:
+
+![image](https://github.com/user-attachments/assets/d600a57e-3f86-406c-9b8f-c518b361283a)
+
+Видим, что все Хосты отображаются и активны:
+
+![изображение](https://github.com/user-attachments/assets/de514f0d-fa41-4a9b-90c8-be754bc9b70d)
+
+![image](https://github.com/user-attachments/assets/105aea22-4940-466c-b2fd-1abb334ed936)
+
+
+
+## Логи
+
+Устанавливаем Elasticsearch:
+
+![изображение](https://github.com/user-attachments/assets/58a28a93-86a9-4dc5-9e21-865d8435c5d1)
+
+Проверяем, что сервис запустился:
+
+![изображение](https://github.com/user-attachments/assets/a53faa5e-150e-4a3c-b10b-450e8a8d981a)
+
+Устанавливаем Kibana:
+
+![изображение](https://github.com/user-attachments/assets/f4c3471a-b894-4dc6-880e-b0c66672c0c4)
+
+Так же смотрим, что все запущено:
+
+![изображение](https://github.com/user-attachments/assets/c987637a-31f5-4ffa-bdee-a63d8d93006e)
+
+Заходим на виртуальную машину с установленным сервисом, который доступен по адресу **[51.250.44.23](http://51.250.44.23:5601/)**
+
+![изображение](https://github.com/user-attachments/assets/a52511ff-2b4c-427b-8294-79fadb1655c8)
+
+Установливаем Filebeat на вируальные машины с  веб-серверами и настроим на отправку access.log, error.log nginx'ов в Elasticsearch.
+
+![изображение](https://github.com/user-attachments/assets/e45bdf70-af01-47da-831f-82642d54ee50)
+
+![изображение](https://github.com/user-attachments/assets/94cabe73-3067-426e-8ceb-026fc1369ed4)
+
+![изображение](https://github.com/user-attachments/assets/5f4ffb9b-934c-4341-9919-2349db593509)
+
+## Резервное копирование
+
+![image](https://github.com/user-attachments/assets/95978279-3e52-4be6-8bd4-9b2d2d6082cc)
+
+![image](https://github.com/user-attachments/assets/864c9368-60a5-4d5e-a151-e95ee29ac9a5)
+
+
