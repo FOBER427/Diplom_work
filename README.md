@@ -41,13 +41,13 @@
 
 ![изображение](https://github.com/user-attachments/assets/6a12746e-cef9-4def-89e9-ff3774efb72a)
 
-![изображение](https://github.com/user-attachments/assets/9f5e484c-0a2c-4304-947c-20f679c6123f)
+![изображение]( img/11.png)
 
 Создадим [Application load balancer](https://github.com/beast86m/diplom_work/blob/main/terraform/security.tf) для распределения трафика на веб-сервера, созданные ранее. Укажем HTTP router, созданный ранее, зададим listener тип auto, порт 80.
 
 ![image](https://github.com/user-attachments/assets/1c893f57-1799-4d88-929f-fb99a5096558)
 
-![изображение](https://github.com/user-attachments/assets/ff145ebd-9674-4d2a-8df1-189d1b903ec8)
+![изображение]( img/13.png)
 
 Балансировщик досутпен по адресу: **[http://51.250.34.124/](http://51.250.34.124/)**
 
@@ -140,14 +140,14 @@
 
 ![изображение](https://github.com/user-attachments/assets/e45bdf70-af01-47da-831f-82642d54ee50)
 
-![изображение]( img/38)
+![изображение](img/38.png)
 
-![изображение]( img/39)
+![изображение](img/39.png)
 
 ## Резервное копирование
 
-![image]( img/40)
+![изображение](img/40.png)
 
-![image]( img/41)
+![изображение](img/41.png)
 
 
