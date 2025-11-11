@@ -87,9 +87,9 @@
 
 Проверяем работу Балансировщика и вновь созданных сайтов:
 
-![изображение](https://github.com/user-attachments/assets/a0a7bea8-ec7c-4088-a443-eee2e6573158)
+![изображение]( img/24.png)
 
-![изображение](https://github.com/user-attachments/assets/d148267c-f3f6-4685-b823-8c329775bf77)
+![изображение]( img/25.png)
 
 
 ## Мониторинг
