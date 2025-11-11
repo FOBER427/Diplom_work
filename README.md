@@ -29,13 +29,13 @@
 
 ![изображение](https://github.com/user-attachments/assets/048de38c-d623-4629-b4db-a436fe8414bb)
 
-![изображение](https://github.com/user-attachments/assets/90af9363-08b4-41a9-83c6-d5d4a25cd0fd)
+![изображение](img/7.png)
 
 Создаем [Backend Group](https://github.com/beast86m/diplom_work/blob/main/terraform/security.tf), настраиваем backends на target group, ранее созданную. Настроаиваем healthcheck на корень (/) и порт 80, протокол HTTP:
 
 ![изображение](https://github.com/user-attachments/assets/c75b4221-8112-49e3-94c8-78ef6036c615)
 
-![изображение](https://github.com/user-attachments/assets/2ea6f39d-8844-4421-a723-9ac0d8f9e47c)
+![изображение](img/9.png)
 
 Создаем HTTP router. Путь укажем — /, backend group — созданную ранее:
 
